@@ -1,12 +1,10 @@
 function [u_TV, out]=ROF_ADMM_1D_alg(b,u_0,mu,beta,gamma,delta,nr_shrinks,nr_grads,nr_threads)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+
 mu2=mu/2;
 beta2=beta/2;
 beta_inv=1/beta;
 image_size=size(b);
 out.alpha_k = [];
-%    out.primal_dual_gap = [];
 out.TV_term = [];
 out.TV_norm = [];
 out.w_norm = [];
@@ -24,13 +22,8 @@ e_k=u_k-b;%(1) initialize image error
 
 wV_n=zeros(image_size);%(3)components of TV estimate
 cV_n=zeros(image_size);%(3) components of scaled Lagrange coefficients for TV mismatch
-%     cR_n=.5*ones(p,q);
-%     cC_n=.5*ones(p,q);
-%     cR_n=-zR_n;
-%     cC_n=-zC_n;
 dV_k=zV_n;%(4)y component of quadratic TV term d_k=z_k-w_k-c_k;
 
-% Lambda_k=L_k-beta2*(sum(sum(cR_n.*cR_n))+sum(sum(cC_n.*cC_n)));
 Lambda_k=beta2*(sum(zV_n(:).*zV_n(:)));%initializer
 
 for shrink_count=1:nr_shrinks%denoted with n
@@ -54,12 +47,6 @@ for shrink_count=1:nr_shrinks%denoted with n
         out.alpha_k = [out.alpha_k; alpha_k];
         %-----------------end of CALCULATE STEP SIZE alpha--------------------------
         u_k=u_k-alpha_k*g_k;%(8)
-        %             if min(min(u_k))<0 %ignore this step
-        %                 alpha_k=alpha_k*.98;
-        %                 u_k=max(u_k,0);
-        %                 u_k=u_k-min(min(u_k));
-        %                 u_k=u_k;
-        %             end
         [zV_n]=Dv_U(u_k,nr_threads);%(9)D.u_k, x,y-gradient of the new u_k
         TV_norm=sum(sum(abs(zV_n(:))));
 
@@ -80,7 +67,6 @@ for shrink_count=1:nr_shrinks%denoted with n
         out.shrink_count = [out.shrink_count; shrink_count];
         out.P_k = [out.P_k;P_k];
         out.Lambda_k = [out.Lambda_k;Lambda_k];
-        %            out.primal_dual_gap = [out.primal_dual_gap;Q_k-beta2*(sum(sum(cR_n.*cR_n))+sum(sum(cC_n.*cC_n)))-data_term];
     end % for gradient_count, denoted with k, 
     % shrinkage
     sV_n=zV_n-cV_n;%(13)
@@ -94,18 +80,9 @@ for shrink_count=1:nr_shrinks%denoted with n
     Q_kw=TV_term+data_term;%(15), %Q value after w update
     L_k=w_norm+Q_kw;%(17)
     Lambda_k=L_k-beta2*(sum(cV_n(:).*cV_n(:)));%(17)
-    %     if abs(Lambda_k-P_k)<=tol%(18)
-    %         cR_n=cR_n-(zR_n-wR_n);
-    %         cC_n=cC_n-(zC_n-wC_n);
-    cV_n=cV_n-delta*(zV_n-wV_n);%(19) delta zpomaluje integrator
+    cV_n=cV_n-delta*(zV_n-wV_n);%(19) delta slows down the integrator
 
     dV_k=rV_k-cV_n;%(20)
-    %         cR_n=(1-delta)*cR_n-delta*(zR_n-wR_n); blbost, pri nulove chybe odezni
-    %         cC_n=(1-delta)*cC_n-delta*(zC_n-wC_n); blbost, pri nulove chybe odezni
-    %         cR_n=-delta*(zR_n-wR_n); proporcionalni regulace, zachova odchylku TV
-    %         cC_n=-delta*(zC_n-wC_n); proporcionalni regulace, zachova odchylku TV
-    
-    %         end % if abs(Lambda_k-P_k)<tol
     TV_term_d=beta2*(sum(dV_k(:).*dV_k(:)));
     Q_k_d=TV_term_d+data_term;
     L_k_d=w_norm+Q_k_d;

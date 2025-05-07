@@ -1,6 +1,4 @@
 Echo_1=squeeze(Echoes(:,:,:,:,1));
-% Echo_2=squeeze(Echoes(:,:,:,:,2));
-% Echo_3=squeeze(Echoes(:,:,:,:,3));
 Echo_1=Echo_1(:);
 Echo_1=Echo_1(Echo_1>0);
 
@@ -49,7 +47,6 @@ while(plot_mask)
     echo=1;
     background_mask=squeeze(Echoes(:,:,slc,vol,echo)>threshold);
     background_mask_fig=3;
-    background_mask_name=['background mask(slc,1,1) for threshold=' num2str(threshold)];
     subplot(2,2,4)
     imshow(background_mask,[])
     background_mask_name=['background mask(slc,1,1) for threshold=' num2str(threshold)];

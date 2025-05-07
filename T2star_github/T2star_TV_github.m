@@ -2,13 +2,10 @@ wd=cd;
 addpath(wd)
 clear variables;close all hidden
 warning off
-% load('GS_statistics.mat','GS_statistics')
 format shortG
 commandwindow
 running_operation_string=['CBIA>>please make sure spm12 toolbox is on your MATLAB path'];
 disp(running_operation_string)
-% spm_rmpath
-% addpath I:\Code\MATLAB_ext_toolboxes\spm12
 fullscreen = get(0,'ScreenSize');
 screen_left=fullscreen(1);
 screen_bottom=fullscreen(2);
@@ -110,7 +107,6 @@ end %if isempty(mu)
 log2_mu=log2(mu);
 
 beta_default=2^-4;
-% beta_default=1;
 beta_string=['CBIA>>enter log2(beta), or press RETURN for default [' num2str(log2(beta_default)) ']:'];
 beta=2^str2num(input(beta_string,'s'));
 if isempty(beta)
@@ -130,8 +126,6 @@ if isempty(delta)
     delta=1;
 end
 
-% nr_shrinks_default=100;
-% nr_shrinks_default=50;
 nr_shrinks_default=10;
 nr_shrinks_string=['CBIA>>enter nr_shrinks, or press RETURN for default [' num2str(nr_shrinks_default) ']:'];
 nr_shrinks=str2num(input(nr_shrinks_string,'s'));

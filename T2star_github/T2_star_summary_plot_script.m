@@ -14,7 +14,6 @@ plot(col,row,line_descriptor,...
 hold off
 
 subplot(2,3,2);
-% imshow(echo_face,[],'InitialMagnification','fit','Border','tight')
 imshow(Noise_mask_slc(:,:,1),[])
 title('Noise mask')
 hold on
@@ -39,7 +38,6 @@ hold off
 ref_echo_face = squeeze(Ref_echoes(:,:,slc,1,1));
 subplot(2,3,4);imshow(ref_echo_face,[]);
 title('reference echo')
-% imshow(echo_face,[],'InitialMagnification','fit','Border','tight')
 
 hold on
 plot(col,row,line_descriptor,...
@@ -66,7 +64,6 @@ title('original and filtered three echo pencils')
 
 subplot(2,3,6);
 T2star_pencil=squeeze(T2star_GS_slc(row,col,:));
-% T2star_pencil=squeeze(T2star_GS_slc_95prc(row,col,:));
 axis([0 max(t_rf) 0 1.1*max(T2star_pencil)])% axis length must be >0
 box on
 hold on

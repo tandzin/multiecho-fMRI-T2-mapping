@@ -174,10 +174,6 @@ for slc_idx = 1:D
         
         Nonzero_mask_array=(Echo_array>0);
         nr_of_iterations=4;
-        %     nr_of_iterations=10;
-        % nr_of_iterations=15;
-        % nr_of_iterations=20;
-        % nr_of_iterations=30;
         
         A_i=zeros(H,W,nr_of_iterations);
         B_i=zeros(H,W,nr_of_iterations);
@@ -193,13 +189,7 @@ for slc_idx = 1:D
         layer=3;
         C_max=Echo_array(:,:,layer);
         C_max=C_min;
-        % C_max=max((Min_Echo+Max_Echo)/2,1);
-        % C_max=max(Min_Echo+(Max_Echo-Min_Echo)/5.0,1);
-        % C_max=Max_Echo/2;% GUARANTEED WRONG, c may be > Max_Echo/2
-        % C_max=max(2*Min_Echo,1);
-        % C_max=max(Max_Echo,0);
         C=C_min;
-        % C=C_max; has effect only on the first iteration, not on result
         for iteration=1:nr_of_iterations
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % update b in E=a*exp(-bt)+c
@@ -270,21 +260,6 @@ for slc_idx = 1:D
                 B_i(:,:,iteration)=B;
                 C_i(:,:,iteration)=C;
                 C=x_inner;
-%                 A_LL=A;
-%                 B_LL=B;
-%                 C_LL=C;
-%                 T2_LL=1./B;
-%                 T2_LL=min(T2_LL,realmax('single'));
-%                 T2_LL=T2_LL.*(NUM~=0)+realmax('single').*(NUM==0);
-%                 T2_LL=T2_LL.*(DEN~=0)+0.*(DEN==0);
-%                 if do_limitation
-%                     T2_LL=max(T2_LL,min_T2);
-%                     T2_LL=min(T2_LL,max_T2);
-%                 end
-%                 % imwrite_tiff_single_LZW(single(T2_LL),'T2_LL.tif')
-                % imwrite_tiff_single_LZW(single(A_LL),'A_LL.tif')
-                % imwrite_tiff_single_LZW(single(B_LL),'B_LL.tif')
-                % imwrite_tiff_single_LZW(single(C_LL),'C_LL.tif')
             elseif(iteration==2)% initialize probe GS point
                 G_inner=G;
                 x_probe=x_left+(x_right-x_left)*golden_section;%will lie to the right of x_inner
@@ -338,12 +313,6 @@ for slc_idx = 1:D
             T2_GS=min(T2_GS,max_T2);
         end
         T2star_GS_slc(:,:,vol_idx)= T2_GS;
-%         imshow_volume_T2s = false;
-%         T2star_show_volume_T2s_script        
-%         pick_another_pixel=false;
-%         dump_last_volume = false;
-%         T2star_pick_and_plot_volume_pencil_script
-%         close all
     end % for vol_idx = 1:nr_volumes%
     T2star_GS(:,:,slc_idx,:)= T2star_GS_slc;
     Noise_mask(:,:,slc_idx,:)= Noise_mask_slc;    
@@ -497,4 +466,3 @@ while pick_another_pixel
     end
 end
 commandwindow
-% cd('I:\Code\matlab\jm\m_files')
